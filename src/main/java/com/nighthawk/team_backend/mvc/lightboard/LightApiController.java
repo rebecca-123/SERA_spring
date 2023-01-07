@@ -17,41 +17,29 @@ public class LightApiController {
     @GetMapping("/random")
     public ResponseEntity<JsonNode> getLight() throws JsonMappingException, JsonProcessingException {
         Light light = new Light();
-
-        // turn calculator object into JSON
         ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readTree(light.toString()); // this requires exception handling
-
-      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
+        return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
     }
     @GetMapping("/custom/board/{rows}/{cols}")
     public ResponseEntity<JsonNode> getCustomBoard(@PathVariable int rows, @PathVariable int cols) throws JsonMappingException, JsonProcessingException {
         LightBoard lightBoard = new LightBoard(rows, cols);
-
-        // turn calculator object into JSON
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode json = mapper.readTree(lightBoard.toString()); // this requires exception handling
-
-      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
+        JsonNode json = mapper.readTree(lightBoard.toString()); 
+        return ResponseEntity.ok(json);
     }
     @GetMapping("/checkerboard/{rows}")
     public ResponseEntity<JsonNode> getCustomBoard(@PathVariable int rows) throws JsonMappingException, JsonProcessingException {
-      CheckerBoard checkerBoard = new CheckerBoard(8);
-
-        // turn calculator object into JSON
+        CheckerBoard checkerBoard = new CheckerBoard(8);
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode json = mapper.readTree(checkerBoard.toString()); // this requires exception handling
-
-      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
-    }
+        JsonNode json = mapper.readTree(checkerBoard.toString());
+        return ResponseEntity.ok(json);
+    }    
     @GetMapping("/board")
     public ResponseEntity<JsonNode> getBoard() throws JsonMappingException, JsonProcessingException {
         LightBoard lightBoard = new LightBoard(10, 10);
-
-        // turn calculator object into JSON
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode json = mapper.readTree(lightBoard.toString()); // this requires exception handling
-
-      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
+        JsonNode json = mapper.readTree(lightBoard.toString());
+        return ResponseEntity.ok(json);
     }
 }
