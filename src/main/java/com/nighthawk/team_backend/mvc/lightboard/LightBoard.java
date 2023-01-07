@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data  // Annotations to simplify writing code (ie constructors, setters)
 public class LightBoard {
-    private Light[][] lights;
+    protected Light[][] lights;
 
     /* Initialize LightBoard and Lights */
     public LightBoard(int numRows, int numCols) {

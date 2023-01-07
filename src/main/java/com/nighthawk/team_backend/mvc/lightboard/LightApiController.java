@@ -2,6 +2,7 @@ package com.nighthawk.team_backend.mvc.lightboard;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,26 @@ public class LightApiController {
         // turn calculator object into JSON
         ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readTree(light.toString()); // this requires exception handling
+
+      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
+    }
+    @GetMapping("/custom/board/{rows}/{cols}")
+    public ResponseEntity<JsonNode> getCustomBoard(@PathVariable int rows, @PathVariable int cols) throws JsonMappingException, JsonProcessingException {
+        LightBoard lightBoard = new LightBoard(rows, cols);
+
+        // turn calculator object into JSON
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode json = mapper.readTree(lightBoard.toString()); // this requires exception handling
+
+      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
+    }
+    @GetMapping("/checkerboard/{rows}")
+    public ResponseEntity<JsonNode> getCustomBoard(@PathVariable int rows) throws JsonMappingException, JsonProcessingException {
+      CheckerBoard checkerBoard = new CheckerBoard(8);
+
+        // turn calculator object into JSON
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode json = mapper.readTree(checkerBoard.toString()); // this requires exception handling
 
       return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
     }

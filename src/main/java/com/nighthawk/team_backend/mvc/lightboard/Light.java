@@ -57,6 +57,14 @@ public class Light {
         }    
     }
 
+    public Light(short r, short g, short b) {
+        this.red = r;
+        this.green = g;
+        this.blue = b;
+        this.onOff();
+        this.effect = 0;
+    }
+
     public void onOff(){
         if(((int)Math.random() * 100) <= 39){
             this.on = true;
