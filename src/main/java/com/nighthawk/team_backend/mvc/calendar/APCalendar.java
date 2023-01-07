@@ -1,8 +1,5 @@
 package com.nighthawk.team_backend.mvc.calendar;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-
 // Prototype Implementation
 
 public class APCalendar {
@@ -12,30 +9,21 @@ public class APCalendar {
      * isLeapYear(2016) returns True
      */          
     public static boolean isLeapYear(int year) {
-        if(year % 100 == 0){ // century year
-            if(year % 400 == 0){
-                return true;
-            }
-            return false; // divisible by 100, but not 400
-        }
-        else if(year % 4 == 0){ // other years --> divisible by 4
+        if (year % 4 == 0){
             return true;
         }
-        return false;
-    }
 
-    /** Returns the number of leap years between year1 and year2, inclusive.
-     * Precondition: 0 <= year1 <= year2
-    */ 
-    public static int numberOfLeapYears(int year1, int year2) {
-        int count = 0;
-        for(int i = year1; i <= year2; i++){
-            if(isLeapYear(i)){
-                count++;
-            }
+        return false;
         }
-        return count;
-    }    
+
+
+    static int dayofyear(int d, int m, int y){
+        int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
+        if (m < 3)
+            y--;
+        return (y + y / 4 - y / 100 + y / 400 + t[m - 1]+ d) % 7;
+    }
+     
         
     /** Returns the value representing the day of the week 
      * 0 denotes Sunday, 
@@ -43,25 +31,11 @@ public class APCalendar {
      * 6 denotes Saturday. 
      * firstDayOfYear(2019) returns 2 for Tuesday.
     */
-    private static int firstDayOfYear(int year) {
-        return dayOfWeek(1, 1, year);
-    }
-
-    /** Returns the value representing the day of the week for the given date
-     * Precondition: The date represented by month, day, year is a valid date.
-    */
-    public static int dayOfWeek(int month, int day, int year) { 
-        // https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html
-            // LocalDate.of returns local date
-        LocalDate date = LocalDate.of(year, month, day);
-        DayOfWeek dayCalc = date.getDayOfWeek();
-        // https://docs.oracle.com/javase/8/docs/api/java/time/DayOfWeek.html
-            // DayOfWeek enum: 1-7 to represent M-S
-        if(dayCalc.getValue() == 7){ // Change Sunday from 7 to 0
-            return 0;
+    static int firstDayOfYear(int year) {
+        // implementation not shown
+        return dayofyear(1, 1, year);
         }
-        return dayCalc.getValue();
-    }
+
 
     /** Returns n, where month, day, and year specify the nth day of the year.
      * This method accounts for whether year is a leap year. 
@@ -69,23 +43,105 @@ public class APCalendar {
      * dayOfYear(3, 1, 2017) returns 60, since 2017 is not a leap year
      * dayOfYear(3, 1, 2016) returns 61, since 2016 is a leap year. 
     */ 
-    private static int dayOfYear(int month, int day, int year) {
-        // implementation not shown
+    public static int dayOfYear(int month, int day, int year) {
+        int day_number = 0;
+        if (isLeapYear(year)){
+            day_number +=1;
+        }
 
-        return 1;
+        //jan
+        if (month ==1){
+            day_number = day_number + day;
+        }
+        //feb
+        else if (month ==2){
+            day_number = day_number + (31 + day);
+        }
+        else if (month ==3){
+            day_number = day_number + (31 + 28 + day);
+        }
+        else if (month ==4){
+            day_number = day_number + (31 + 28 + 31+ day);
+        }
+        else if (month ==5){
+            day_number = day_number + (31 + 28 + 31+ 30 + day);
+        }
+        else if (month ==6){
+            day_number = day_number + (31 + 28 + 31+ +30 + 31+ day);
+        }
+        else if (month ==7){
+            day_number = day_number + (31 + 28 + 31+ +30 + 31+ 30 + day);
+        }
+        else if (month ==8){
+            day_number = day_number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ day);
+        }
+        else if (month ==9){
+            day_number = day_number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ 31 + day);
+        }
+        else if (month ==10){
+            day_number = day_number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ 31 + 30 + day);
+        }
+        else if (month ==11){
+            day_number = day_number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ 31 + 30 + 31 + day);
+        }
+        else if (month ==12){
+            day_number = day_number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ 31 + 30 + 31 + 30 + day);
+        }
+
+
+        return day_number;
     }
+
+    /** Returns the number of leap years between year1 and year2, inclusive.
+     * Precondition: 0 <= year1 <= year2
+    */ 
+    public static int numberOfLeapYears(int year1, int year2) {
+         // to be implemented in part (a)
+    
+        int leap_counter = 0;
+        for (int i=0; i<=(year2-year1);i++){
+            if (isLeapYear(year1 + i)){
+                leap_counter +=1;
+            }
+        }
+        return leap_counter;
+       
+        
+
+    }
+
+    /** Returns the value representing the day of the week for the given date
+     * Precondition: The date represented by month, day, year is a valid date.
+    */
+    public static int dayOfWeek(int month, int day, int year) { 
+        // to be implemented in part (b)
+        int day_of_the_year = dayOfYear(month, day, year);
+        int remainder = day_of_the_year % 7;
+        int first_day = firstDayOfYear(year);
+        int day_of_week = first_day + remainder - 1;
+        if (day_of_week>6){
+            day_of_week = 6;
+        }
+        else if (day_of_week<0){
+            day_of_week = 0;
+        }
+        return day_of_week;
+        
+        }
+
+
+        
 
     /** Tester method */
     public static void main(String[] args) {
-        System.out.println("firstDayOfYear - January 1st, 2022: " + APCalendar.firstDayOfYear(2022));
+        // Private access modifiers
+        System.out.println("firstDayOfYear: " + APCalendar.firstDayOfYear(2022));
         System.out.println("dayOfYear: " + APCalendar.dayOfYear(1, 1, 2022));
-        System.out.println("dayOfWeek: " + APCalendar.dayOfWeek(1, 1, 2022));
-        System.out.println("dayOfWeek: " + APCalendar.dayOfWeek(1, 2, 2022));
 
         // Public access modifiers
-        System.out.println("isLeapYear for 2022: " + APCalendar.isLeapYear(2022));
-        System.out.println("isLeapYear for 2000: " + APCalendar.isLeapYear(2000));
-        System.out.println("numberOfLeapYears between 1900 and 1999: " + APCalendar.numberOfLeapYears(1900, 1999));
+        System.out.println("isLeapYear: " + APCalendar.isLeapYear(2022));
+        System.out.println("numberOfLeapYears: " + APCalendar.numberOfLeapYears(2000, 2022));
+        System.out.println("dayOfWeek: " + APCalendar.dayOfWeek(1, 1, 2022));
     }
 
 }
