@@ -11,7 +11,7 @@ import java.util.Stack;
    In computers,
     expression can be hard to calculate with precedence rules and user input errors
     to handle computer math we often convert strings into reverse polish notation
-    to handle errors we perform try / catch or set default conditions to trap errors
+    to handle errors we perform try / catch or set default conditions to trap errorss
      */
 public class Calculator {
     // Key instance variables
@@ -19,13 +19,15 @@ public class Calculator {
     private ArrayList<String> tokens;
     private ArrayList<String> reverse_polish;
     private Double result = 0.0;
-    private String error = "";
+    private boolean error = false;
 
     // Helper definition for supported operators
     private final Map<String, Integer> OPERATORS = new HashMap<>();
     {
         // Map<"token", precedence>
-        OPERATORS.put("^", 3);
+        OPERATORS.put("RT", 1);
+        OPERATORS.put("SQRT", 1);
+        OPERATORS.put("^", 2);
         OPERATORS.put("*", 3);
         OPERATORS.put("/", 3);
         OPERATORS.put("%", 3);
@@ -51,7 +53,10 @@ public class Calculator {
         this.termTokenizer();
 
         // place terms into reverse polish notation
-        this.tokensToReversePolishNotation();
+        if (false == this.tokensToReversePolishNotation()){
+            error = true;
+            return;
+        }
 
         // calculate reverse polish notation
         this.rpnToResult();
@@ -82,9 +87,9 @@ public class Calculator {
 
         int start = 0;  // term split starting index
         StringBuilder multiCharTerm = new StringBuilder();    // term holder
-        for (int i = 0; i < this.expression.length(); i++){
+        for (int i = 0; i < this.expression.length(); i++) {
             Character c = this.expression.charAt(i);
-            if ( isOperator(c.toString()) || isSeparator(c.toString())) {
+            if ( isOperator(c.toString() ) || isSeparator(c.toString())  ) {
                 // 1st check for working term and add if it exists
                 if (multiCharTerm.length() > 0) {
                     tokens.add(this.expression.substring(start, i));
@@ -96,64 +101,12 @@ public class Calculator {
                 // Get ready for next term
                 start = i + 1;
                 multiCharTerm = new StringBuilder();
-            // check for SQRT
             } else {
-                if(i + 3 <= this.expression.length()-1 && this.expression.substring(i, i+4).equals("SQRT") ){
-                        // SQRT num
-                        if(this.expression.substring(i+4, i+5).equals(" ")){
-                            String startFromNum = this.expression.substring(i+5, this.expression.length());
-                            if(startFromNum.indexOf(" ") > 0){ // determine if there a space after num
-                                int end = startFromNum.indexOf(" ");
-                                String sub = this.expression.substring(0, end); // get expression SQRT num
-                                try{
-                                    // in the case of only a Double
-                                    double rt = Double.parseDouble(sub.substring(5, sub.length()));
-                                    tokens.add(String.valueOf(Math.pow(rt, 0.5))); 
-                                }
-                                catch(Exception e){
-                                    // SQRT expression, must evaluate expression first
-                                    Calculator exp = new Calculator(sub.substring(5, sub.length()));
-                                    tokens.add(String.valueOf(Math.pow(exp.result, 0.5)));
-                                }
-                                // adjust by SQRT num
-                                i += sub.length(); 
-                                start += sub.length();   
-                            }
-                            else{ // SQRT num is end of expression
-                                try{
-                                    double rt = Double.parseDouble(startFromNum);
-                                    tokens.add(String.valueOf(Math.pow(rt, 0.5)));
-                                }
-                                catch(Exception e){
-                                    Calculator exp = new Calculator(startFromNum);
-                                    tokens.add(String.valueOf(Math.pow(exp.result, 0.5)));
-                                }
-                                // adjust by length of num + SQRT + space
-                                i += startFromNum.length() + 5; 
-                                start += startFromNum.length() + 5;
-                            }  
-                        } else { // SQRT(num)
-                            // find next closing parenthesis
-                            String startFromRt = this.expression.substring(i, this.expression.length());
-                            int end = startFromRt.indexOf(")");
-
-                            // cut off everything after number
-                            String sub = startFromRt.substring(0, end+1);
-                            Calculator exp = new Calculator(sub.substring(5, sub.length()-1));
-                            double rt = exp.result;
-
-                            // calculate and add result
-                            tokens.add(String.valueOf(Math.pow(rt, 0.5)));
-                            i += sub.length();
-                            start += sub.length();
-                        }           
-                }
-                else {
-                    // multi character terms: numbers, functions, perhaps non-supported elements
-                    // Add next character to working term
-                    multiCharTerm.append(c);
-                }    
+                // multi character terms: numbers, functions, perhaps non-supported elements
+                // Add next character to working term
+                multiCharTerm.append(c);
             }
+
         }
         // Add last term
         if (multiCharTerm.length() > 0) {
@@ -162,7 +115,7 @@ public class Calculator {
     }
 
     // Takes tokens and converts to Reverse Polish Notation (RPN), this is one where the operator follows its operands.
-    private void tokensToReversePolishNotation () {
+    private boolean tokensToReversePolishNotation () {
         // contains final list of tokens in RPN
         this.reverse_polish = new ArrayList<>();
 
@@ -175,19 +128,21 @@ public class Calculator {
                     tokenStack.push(token);
                     break;
                 case ")":
-                    try{
-                        while (tokenStack.peek() != null && !tokenStack.peek().equals("("))
-                        {
-                            reverse_polish.add(tokenStack.pop());
+                    while (tokenStack.peek() != null && !tokenStack.peek().equals("("))
+                    {
+                        reverse_polish.add( tokenStack.pop() );
+                        if (tokenStack.isEmpty()) {
+                            System.out.println("Error: Unbalanced Parenthesis Detected");
+                            return false;
                         }
-                        tokenStack.pop();
                     }
-                    catch(Exception e){   
-                    }
+                    tokenStack.pop();   
                     break;
+                case "RT":
+                case "SQRT":
+                case "^":
                 case "+":
                 case "-":
-                case "^":
                 case "*":
                 case "/":
                 case "%":
@@ -196,7 +151,7 @@ public class Calculator {
                     // and is an operator
                     while (tokenStack.size() > 0 && isOperator(tokenStack.peek()))
                     {
-                        if (isPrecedent(token, tokenStack.peek())) {
+                        if ( isPrecedent(token, tokenStack.peek() )) {
                             reverse_polish.add(tokenStack.pop());
                             continue;
                         }
@@ -206,18 +161,19 @@ public class Calculator {
                     tokenStack.push(token);
                     break;
                 default:    // Default should be a number, there could be test here
-                    try {
-                        Double.parseDouble(token);
-                        this.reverse_polish.add(token);
-                    } catch (NumberFormatException nfe) {
-                        error += nfe;
-                    }
+                    this.reverse_polish.add(token);
             }
         }
         // Empty remaining tokens
         while (tokenStack.size() > 0) {
+            // If there is "(" in the tokenStack, there must be a mismatch in ()
+            if( tokenStack.peek().equals("(")) {
+                System.out.println("Error: Unbalanced Parenthesis Detected");
+                return false;
+            }
             reverse_polish.add(tokenStack.pop());
         }
+        return true;
 
     }
 
@@ -233,40 +189,46 @@ public class Calculator {
             // If the token is an operator, calculate
             if (isOperator(token))
             {
-                try{
-                    // Pop the two top entries
-                    Double num1 = calcStack.pop();
-                    Double num2 = calcStack.pop();
-
-                    // Calculate intermediate results
-                    switch(token){
-                        case "+":
-                            result = num1 + num2;
-                            break;
-                        case "-":
-                            // num1 is number on left side of expression (pushed on to the stack later, so it is at the top)
-                            result = num2 - num1;
-                            break;
-                        case "*":
-                            result = num1 * num2;
-                            break;
-                        case "/":
-                            result = num2 / num1;
-                            break;
-                        case "%":
-                            result = num2 % num1;
-                            break;
-                        case "^":
-                            result = Math.pow(num2, num1);  
-                            break;
-                        default:
-                            result = 0.0;
-                    }           
+                double operand2 = 0.0;
+                // Pop the two top entries
+                double operand1 = calcStack.pop();
+                if (!token.equals("SQRT")){
+                    operand2 = calcStack.pop();
                 }
-                catch(Exception e){   
-                } 
+
+
+                // Calculate intermediate results
+                switch(token){
+                    case "SQRT":
+                        result = Math.sqrt(operand1);
+                        break;
+                    case "RT":
+                        result = Math.pow(operand1, (1/operand2));
+                        break;
+                    case "^":
+                        result = Math.pow(operand2, operand1);
+                        break;
+                    case "+":
+                        result = operand2 + operand1;
+                        break;
+                    case "-":
+                        result = operand2 - operand1;
+                        break;
+                    case "*":
+                        result = operand2 * operand1;
+                        break; 
+                    case "/":
+                        result = operand2 / operand1;
+                        break;
+                    case "%":
+                        result = operand2 % operand1;
+                        break;
+                    default: 
+                        System.out.println("Error: Invalid Operator");
+                }
+
                 // Push intermediate result back onto the stack
-                calcStack.push(result);
+                calcStack.push( result );
             }
             // else the token is a number push it onto the stack
             else
@@ -280,43 +242,32 @@ public class Calculator {
 
     // Print the expression, terms, and result
     public String toString() {
-        // check for balanced parentheses
-        Delimiters test = new Delimiters("(", ")");
-        if(test.isBalanced(test.getDelimitersList(this.tokens))){
-            // Other error with tokens
-            if(this.error.trim().length() > 0){
-                return("Original expression: " + this.expression + "\n" + "Tokenized expression: " + this.tokens.toString() + "\nError: Unexpected characters");
-            }
-            else{              
-                return ("Original expression: " + this.expression + "\n" +
-                    "Tokenized expression: " + this.tokens.toString() + "\n" +
-                    "Reverse Polish Notation: " +this.reverse_polish.toString() + "\n" +
-                    "Final result: " + String.format("%.2f", this.result));
-            }    
+        String retValue = "Original expression: " + this.expression + "\n" +
+                "Tokenized expression: " + this.tokens.toString() + "\n" +
+                "Reverse Polish Notation: " + this.reverse_polish.toString() + "\n" +
+                "Final result: " + String.format("%.2f", this.result) + "\n" +
+                "Error: " + this.error;
+                
+        if(error) {
+            retValue += " : Unbalanced Parenthesis Detected";
         }
-        else{
-            return("Original expression: " + this.expression + ", Error: Unbalanced parentheses." + "\nParenthesis Delimiters: " + test.getDelimitersList(this.tokens));
-        }
+
+        return retValue;
     }
 
-    public String apiToString(){
-        // check for balanced parentheses
-        Delimiters test = new Delimiters("(", ")");
-        if(test.isBalanced(test.getDelimitersList(this.tokens))){
-            if(this.error.trim().length() > 0){
-                return("{\"Error\": \"Unexpected characters\"}");
-            }
-            else{              
-                return("{\"Result\": " + String.format("%.2f", this.result) + "}");
-            }    
-        }
-        else{
-            return("{\"Error\": " + "\"Unbalanced parentheses\"}");
-        }
-    }
-    
     // Tester method
     public static void main(String[] args) {
+
+        Calculator parenthesisMismatch1 = new Calculator("((300 * 2) + 3");
+        System.out.println("Parenthesis Check 1\n" + parenthesisMismatch1);
+
+        System.out.println();
+
+        Calculator parenthesisMismatch2 = new Calculator("(300 * 2) + 3)");
+        System.out.println("Parenthesis Check 2\n" + parenthesisMismatch2);
+
+        System.out.println();
+
         // Random set of test cases
         Calculator simpleMath = new Calculator("100 + 200  * 3");
         System.out.println("Simple Math\n" + simpleMath);
@@ -343,31 +294,20 @@ public class Calculator {
 
         System.out.println();
 
-        Calculator unbalanced = new Calculator("(5 + 3) ^ 2)");
-        System.out.println("Unbalanced Parentheses\n" + unbalanced);
+        Calculator powMath = new Calculator("2^3");
+        System.out.println("Power Math\n" + powMath);
 
         System.out.println();
 
-        Calculator unexpectedChar = new Calculator("2a + 4");
-        System.out.println("Unexpected Characters\n" + unexpectedChar);
+        Calculator rtMath = new Calculator("3 RT 8");
+        System.out.println("Root Math\n" + rtMath);
 
         System.out.println();
 
-        // testing both SQRT(num) and SQRT num
-        Calculator squareRt = new Calculator("SQRT(49) + 5 - 9 * SQRT 5*2");
-        System.out.println("Expected Answer: " + -16.46);
-        System.out.println("Square Root\n" + squareRt);
+        Calculator sqrtMath = new Calculator("SQRT 9");
+        System.out.println("Square Root Math\n" + sqrtMath);
 
-        System.out.println();
 
-        Calculator exponentMath = new Calculator("(5 + 3) ^ SQRT(9*21-10^2)");
-        System.out.println("Expected Answer: " + 330928292);
-        System.out.println("Exponent Math\n" + exponentMath);
-
-        System.out.println();
-
-        Calculator superComplicatedExpression = new Calculator("(96-6) % 10 ^ SQRT(72-56) - SQRT(36) + SQRT 52+4*3-27");
-        System.out.println("Expected Answer: " + 0.08);
-        System.out.println("Complex Expression\n" + superComplicatedExpression);
+        
     }
 }
