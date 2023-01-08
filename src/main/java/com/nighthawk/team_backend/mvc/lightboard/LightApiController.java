@@ -30,7 +30,7 @@ public class LightApiController {
     }
     @GetMapping("/checkerboard/{rows}")
     public ResponseEntity<JsonNode> getCustomBoard(@PathVariable int rows) throws JsonMappingException, JsonProcessingException {
-        CheckerBoard checkerBoard = new CheckerBoard(8);
+        CheckerBoard checkerBoard = new CheckerBoard(rows);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readTree(checkerBoard.toString());
         return ResponseEntity.ok(json);
