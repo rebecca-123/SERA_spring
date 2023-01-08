@@ -57,6 +57,7 @@ public class Light {
         }    
     }
 
+    // custom colors
     public Light(short r, short g, short b) {
         this.red = r;
         this.green = g;

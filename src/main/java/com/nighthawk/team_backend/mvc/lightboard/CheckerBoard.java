@@ -3,10 +3,12 @@ package com.nighthawk.team_backend.mvc.lightboard;
 public class CheckerBoard extends LightBoard {
 
     public CheckerBoard(int numRows){
+        // call superclass constructor to initalize lights
         super(numRows, numRows);
         int index = 0;
         for(int row = 0; row < numRows; row++){
             for(int col = 0; col < numRows; col++){
+                // alternating colors
                 if(index % 2 == 0){
                     lights[row][col] = new Light((short)0, (short)0, (short)0);  // black
                 }
@@ -15,6 +17,7 @@ public class CheckerBoard extends LightBoard {
                 }
                 index++;
             }
+            // alternating starting color of row
             if(row % 2 != 0){
                 index = 0;
             }
