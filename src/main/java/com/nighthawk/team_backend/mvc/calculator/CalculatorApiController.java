@@ -39,7 +39,7 @@ package com.nighthawk.team_backend.mvc.calculator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,9 +47,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/calculator")
 public class CalculatorApiController {
-    @GetMapping("/calculate")
-    public ResponseEntity<String> calculate(@RequestBody final String expression) {
+    @GetMapping("/calculate/{expression}")
+    public ResponseEntity<String> calculate(@PathVariable String expression) {
         try {
+            System.out.println("Expression: " + expression);
             Calculator calculatedExpression = new Calculator(expression);
             return new ResponseEntity<>(calculatedExpression.toString(), HttpStatus.ACCEPTED);
         } catch (RuntimeException e) {
