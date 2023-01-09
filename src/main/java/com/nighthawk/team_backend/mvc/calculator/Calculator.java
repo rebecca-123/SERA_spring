@@ -242,16 +242,17 @@ public class Calculator {
 
     // Print the expression, terms, and result
     public String toString() {
-        String retValue = "Original expression: " + this.expression + "\n" +
-                "Tokenized expression: " + this.tokens.toString() + "\n" +
-                "Reverse Polish Notation: " + this.reverse_polish.toString() + "\n" +
-                "Final result: " + String.format("%.2f", this.result) + "\n" +
-                "Error: " + this.error;
+        String retValue = "{ \"Original_expression\": \"" + this.expression + "\", " +
+                "\"Tokenized_expression\": \"" + this.tokens.toString() + "\", " +
+                "\"Reverse_Polish_Notation\": \"" + this.reverse_polish.toString() + "\", " +
+                "\"Final_result\": " + this.result + ", " +
+                "\"Error\": " + this.error;
                 
-        if(error) {
-            retValue += " : Unbalanced Parenthesis Detected";
-        }
+        // if(error) {
+        //     retValue += " : Unbalanced Parenthesis Detected";
+        // }
 
+        retValue += " }";
         return retValue;
     }
 
