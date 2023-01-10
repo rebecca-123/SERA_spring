@@ -1,1 +1,1 @@
-# Tean SERA Backend
+# Team SERA Backend
