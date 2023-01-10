@@ -21,7 +21,7 @@ public class LightApiController {
         JsonNode json = mapper.readTree(light.toString()); // this requires exception handling
         return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
     }
-    @GetMapping("/custom/board/{rows}/{cols}")
+    @GetMapping("/custom/size/board/{rows}/{cols}")
     public ResponseEntity<JsonNode> getCustomBoard(@PathVariable int rows, @PathVariable int cols) throws JsonMappingException, JsonProcessingException {
         LightBoard lightBoard = new LightBoard(rows, cols);
         ObjectMapper mapper = new ObjectMapper();
