@@ -30,7 +30,7 @@ class Step {
 
    /* isLeapYearToString formatted to be mapped to JSON */
    public String dailyStepsToString(){
-      return ( "{ \"enough:\": "  +this.requiredSteps+ " }" );
+      return ( "{ \"Enough:\": "  +this.requiredSteps+ " }" );
    }	
   
    public static void main(String[] args) {
