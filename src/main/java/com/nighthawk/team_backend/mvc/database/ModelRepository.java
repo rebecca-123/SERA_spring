@@ -3,6 +3,7 @@ package com.nighthawk.team_backend.mvc.database;
 import com.nighthawk.team_backend.mvc.database.club.Club;
 import com.nighthawk.team_backend.mvc.database.club.ClubJpaRepository;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -93,4 +94,6 @@ public class ModelRepository implements UserDetailsService {  // "implements" ti
             }
         }
     }
+
+
 }
