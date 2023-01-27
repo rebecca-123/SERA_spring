@@ -40,8 +40,26 @@ public class Club {
 
     // @NonNull: Places this in @RequiredArgsConstructor
     @NonNull
+    @Size(min = 2, max = 50, message = "Club Purpose (2 to 50 chars)")
+    private String purpose;
+
+    // @NonNull: Places this in @RequiredArgsConstructor
+    @NonNull
     @Size(min = 2, max = 30, message = "Club President (2 to 30 chars)")
     private String president;
+
+    // @NonNull: Places this in @RequiredArgsConstructor
+    @NonNull
+    @Size(min = 2, max = 50, message = "Staff Advisor (2 to 50 chars)")
+    private String advisor;
+
+    // @NonNull: Places this in @RequiredArgsConstructor
+    @NonNull
+    @Size(min = 2, max = 50, message = "Meeting Time and Location (2 to 50 chars)")
+    private String meeting;
+
+    @Size(min = 2, max = 50, message = "Additional Info (2 to 50 chars)")
+    private String info;
 
     // Initializer used when setting database from an API
     public Club(String email, String password, String name) {
