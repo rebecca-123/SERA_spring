@@ -25,4 +25,10 @@ public class Note {
     @NotNull
     @Column(columnDefinition="TEXT")
     private String text;
+
+
+    public String toString(){
+        return ( "{ \"Club_Id\": "  + id +  ", " + "\"Number of Notes\": "  + 4+ " }" );
+     }	
+
 }

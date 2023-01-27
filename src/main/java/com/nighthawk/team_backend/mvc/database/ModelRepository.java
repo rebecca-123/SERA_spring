@@ -3,6 +3,8 @@ package com.nighthawk.team_backend.mvc.database;
 import com.nighthawk.team_backend.mvc.database.club.Club;
 import com.nighthawk.team_backend.mvc.database.club.ClubJpaRepository;
 
+import com.nighthawk.team_backend.mvc.database.note.Note;
+import com.nighthawk.team_backend.mvc.database.note.NoteJpaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +32,7 @@ public class ModelRepository implements UserDetailsService {  // "implements" ti
     // Encapsulate many object into a single Bean (Club, Roles, and Scrum)
     @Autowired  // Inject ClubJpaRepository
     private ClubJpaRepository clubJpaRepository;
+    private NoteJpaRepository noteJpaRepository;
 
     // Setup Password style for Database storing and lookup
     @Autowired  // Inject PasswordEncoder
@@ -57,6 +60,11 @@ public class ModelRepository implements UserDetailsService {  // "implements" ti
         return clubJpaRepository.findAllByOrderByNameAsc();
     }
 
+//NOTE
+    public  List<Note>listAll_note() {
+        return NoteJpaRepository.findAllByClub(null);
+    }
+
     // custom query to find anything containing term in name or email ignoring case
     public  List<Club>listLike(String term) {
         return clubJpaRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(term, term);
@@ -79,12 +87,24 @@ public class ModelRepository implements UserDetailsService {  // "implements" ti
                 : null;
     }
 
+
+    public Note get_note(long id) {
+        return (noteJpaRepository.findById(id).isPresent())
+                ? noteJpaRepository.findById(id).get()
+                : null;
+    }
+
+
     public Club getByEmail(String email) {
         return (clubJpaRepository.findByEmail(email));
     }
 
     public void delete(long id) {
         clubJpaRepository.deleteById(id);
+    }
+
+    public void delete_note(long id) {
+        noteJpaRepository.deleteById(id);
     }
 
     public void defaults(String password, String roleName) {
@@ -95,5 +115,6 @@ public class ModelRepository implements UserDetailsService {  // "implements" ti
         }
     }
 
+  
 
 }
