@@ -61,6 +61,11 @@ public class Club {
     @Size(min = 2, max = 50, message = "Additional Info (2 to 50 chars)")
     private String info;
 
+    // @NonNull: Places this in @RequiredArgsConstructor
+    @NonNull
+    @Size(min = 1, max = 1, message = "Official Club? (Y or N)")
+    private String official;
+
     // Initializer used when setting database from an API
     public Club(String email, String password, String name) {
         this.email = email;
