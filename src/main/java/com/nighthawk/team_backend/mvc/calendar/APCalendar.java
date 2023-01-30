@@ -16,7 +16,6 @@ public class APCalendar {
         return false;
         }
 
-
     static int dayofyear(int d, int m, int y){
         int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
         if (m < 3)

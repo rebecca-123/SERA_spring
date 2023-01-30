@@ -144,6 +144,18 @@
         <artifactId>hsqldb</artifactId>
         <version>2.5.0</version>
       </dependency>
+    
+      <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20190722</version>
+      </dependency>
+    
+      <dependency>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>2.5.0</version>
+      </dependency>
     </dependencies>
 
     <build>
