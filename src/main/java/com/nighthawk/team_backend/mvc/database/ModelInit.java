@@ -11,6 +11,8 @@ import com.nighthawk.team_backend.mvc.database.note.Note;
 import com.nighthawk.team_backend.mvc.database.note.NoteJpaRepository;
 import com.nighthawk.team_backend.mvc.database.club.Club;
 import com.nighthawk.team_backend.mvc.database.club.ClubJpaRepository;
+import com.nighthawk.team_backend.mvc.database.reviews.Review;
+import com.nighthawk.team_backend.mvc.database.reviews.ReviewJpaRepository;
 
 import java.util.List;
 @Component // Scans Application for ModelInit Bean, this detects CommandLineRunner
@@ -18,6 +20,8 @@ public class ModelInit {
     @Autowired JokesJpaRepository jokesRepo;
     @Autowired ClubJpaRepository clubRepo;
     @Autowired NoteJpaRepository noteRepo;
+    @Autowired ReviewJpaRepository reviewRepo;
+
 
     @Bean
     CommandLineRunner run() {  // The run() method will be executed after the application starts
@@ -33,10 +37,14 @@ public class ModelInit {
                     clubRepo.save(club);  // JPA Save
 
                     // Each test person starts with a note
-                    Club p = clubRepo.findByEmail(club.getEmail());  // pull newly saved person from table
+                    Club p = clubRepo.findByEmail(club.getEmail());  // pull newly saved club from table
                     String text = "Test " + p.getEmail();
-                    Note n = new Note(text, p);  // constructor uses new person as Many-to-One association
-                    noteRepo.save(n);  // JPA Save                  
+                    Note n = new Note(text, p);  // constructor uses new note as Many-to-One association
+                    noteRepo.save(n);  // JPA Save 
+
+                    /* String blank="No Reviews Yet!";
+                    Review r = new Review(blank, p);  // constructor uses new review as Many-to-One association
+                    reviewRepo.save(r);  // JPA Save */               
                 }
             }
 
