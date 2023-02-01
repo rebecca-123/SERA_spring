@@ -115,6 +115,10 @@ public class ModelRepository implements UserDetailsService {  // "implements" ti
         }
     }
 
+    public void addNoteToClub(String string, String string2) {
+        
+    }
+
   
 
 }

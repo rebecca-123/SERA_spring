@@ -42,14 +42,8 @@ public class NoteApiController {
     GET individual Person using ID
      */
     @GetMapping("/{id}")
-    public ResponseEntity<JsonNode> calculate(@PathVariable Long id) throws JsonMappingException, JsonProcessingException {
-        Club club = repository.get(id);
-        List<Note> notes = NoteJpaRepository.findAllByClub(club);
-        Note note = new Note();
-        note.setClub(club);
-        ObjectMapper mapper = new ObjectMapper(); 
-        JsonNode json = mapper.readTree(note.toString());
-        return ResponseEntity.ok(json);
+    public ResponseEntity<Club> getClub_note(@PathVariable long id) {
+        return new ResponseEntity<>(repository.get(id), HttpStatus.OK);
     }
 
     /*
