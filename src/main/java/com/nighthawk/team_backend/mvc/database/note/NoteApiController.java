@@ -1,67 +1,67 @@
-package com.nighthawk.team_backend.mvc.database.note;
+// package com.nighthawk.team_backend.mvc.database.note;
 
+// // import com.nighthawk.team_backend.mvc.database.ModelRepository;
 
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.http.HttpStatus;
+
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.web.bind.annotation.*;
+
+// import com.fasterxml.jackson.core.JsonProcessingException;
+// import com.fasterxml.jackson.databind.JsonMappingException;
+// import com.fasterxml.jackson.databind.JsonNode;
+// import com.fasterxml.jackson.databind.ObjectMapper;
 // import com.nighthawk.team_backend.mvc.database.ModelRepository;
+// import com.nighthawk.team_backend.mvc.database.club.Club;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+// import java.util.*;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+// @RestController
+// @RequestMapping("/api/note")
+// public class NoteApiController {
+// /*
+// #### RESTful API ####
+// Resource: https://spring.io/guides/gs/rest-service/
+// */
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nighthawk.team_backend.mvc.database.ModelRepository;
-import com.nighthawk.team_backend.mvc.database.club.Club;
+// // Autowired enables Control to connect HTML and POJO Object to database
+// easily for CRUD
+// @Autowired
+// private ModelRepository repository;
 
-import java.util.*;
+// /*
+// GET List of People
 
-@RestController
-@RequestMapping("/api/note")
-public class NoteApiController {
-    /*
-    #### RESTful API ####
-    Resource: https://spring.io/guides/gs/rest-service/
-    */
+// @GetMapping("/all")
+// public ResponseEntity<List<Note>> getClub_note() {
+// return new ResponseEntity<>(repository.listAll_note(), HttpStatus.OK);
+// }
+// */
+// /*
+// GET individual Person using ID
+// */
+// @GetMapping("/{id}")
+// public ResponseEntity<Club> getClub_note(@PathVariable long id) {
+// return new ResponseEntity<>(repository.get(id), HttpStatus.OK);
+// }
 
-    // Autowired enables Control to connect HTML and POJO Object to database easily for CRUD
-    @Autowired
-    private ModelRepository repository;
+// /*
+// DELETE individual Person using ID
 
-    /*
-    GET List of People
-   
-    @GetMapping("/all")
-    public ResponseEntity<List<Note>> getClub_note() {
-        return new ResponseEntity<>(repository.listAll_note(), HttpStatus.OK);
-    }
-  */
-    /*
-    GET individual Person using ID
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<Club> getClub_note(@PathVariable long id) {
-        return new ResponseEntity<>(repository.get(id), HttpStatus.OK);
-    }
+// @DeleteMapping("/delete/{id}")
+// public ResponseEntity<Object> delete(@PathVariable long id) {
+// repository.delete_note(id);
+// return new ResponseEntity<>( ""+ id +" deleted", HttpStatus.OK);
+// }
+// */
+// /*
+// POST Aa record by Requesting Parameters from URI
+// */
 
-    /*
-    DELETE individual Person using ID
-   
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@PathVariable long id) {
-        repository.delete_note(id);
-        return new ResponseEntity<>( ""+ id +" deleted", HttpStatus.OK);
-    }
-  */
-    /*
-    POST Aa record by Requesting Parameters from URI
-     */
-  
+// /*
+// The personSearch API looks across database for partial match to term (k,v)
+// passed by RequestEntity body
+// */
 
-    /*
-    The personSearch API looks across database for partial match to term (k,v) passed by RequestEntity body
-     */
-   
-}
+// }
