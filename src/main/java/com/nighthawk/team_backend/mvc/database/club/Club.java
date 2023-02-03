@@ -3,6 +3,10 @@ package com.nighthawk.team_backend.mvc.database.club;
 // import com.nighthawk.team_backend.mvc.database.role.Role;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import static javax.persistence.FetchType.EAGER;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -27,8 +31,8 @@ public class Club {
 
     // email, password, roles are key to login and authentication
     @NotEmpty
-    @Size(min=5)
-    @Column(unique=true)
+    @Size(min = 5)
+    @Column(unique = true)
     @Email
     private String email;
 
@@ -40,19 +44,23 @@ public class Club {
     @Size(min = 2, max = 50, message = "Club Name (2 to 50 chars)")
     private String name;
 
-    /* 
-    @NonNull
-    private Note note = new Note("test", this);
+    // To be implemented
+    @ManyToMany(fetch = EAGER)
+    private Collection<ClubRole> roles = new ArrayList<>();
 
-    public String getNote(){
-        return note.getText();
-    }
-
-    public void setNote(String note_input){
-        note.setText(note_input);;
-    }
-
-    */
+    /*
+     * @NonNull
+     * private Note note = new Note("test", this);
+     * 
+     * public String getNote(){
+     * return note.getText();
+     * }
+     * 
+     * public void setNote(String note_input){
+     * note.setText(note_input);;
+     * }
+     * 
+     */
 
     // @NonNull: Places this in @RequiredArgsConstructor
     @NonNull
@@ -88,8 +96,6 @@ public class Club {
         this.password = password;
         this.name = name;
     }
-   
-
 
     public static Club[] init() {
 
@@ -98,43 +104,37 @@ public class Club {
         gics.setName("Girls in Computer Science");
         gics.setEmail("gics.dnhs@gmail.com");
         gics.setPassword("cs123%!");
-       // p1.setNote("hi this is aadya");
+        // p1.setNote("hi this is aadya");
 
         // adding Note to notes collection
-     
 
         Club dnas = new Club();
         dnas.setName("Del Norte Arduino Society");
         dnas.setEmail("arduinoclub.dnhs@gmail.com");
         dnas.setPassword("arduino!");
-       // p2.setNote("hi this is prashant");
-     
+        // p2.setNote("hi this is prashant");
 
         Club nhs = new Club();
         nhs.setName("National Honors Society");
         nhs.setEmail("nhs@gmail.com");
         nhs.setPassword("nhs123!");
-       // p3.setNote("hi this is sirish");
-    
+        // p3.setNote("hi this is sirish");
 
         Club optix = new Club();
         optix.setName("Del Norte Optix");
         optix.setEmail("optix@gmail.com");
         optix.setPassword("1234!");
-      //  p4.setNote("hi this is avan");
-
-
+        // p4.setNote("hi this is avan");
 
         Club gidas = new Club();
         gidas.setName("Genes in Diseases");
         gidas.setEmail("gidas@gmail.com");
         gidas.setPassword("54321!");
-       // p5.setNote("hi this is efhdjwjkf");
-  
+        // p5.setNote("hi this is efhdjwjkf");
 
         // Array definition and data initialization
-        Club clubs[] = {gics, dnas, nhs, optix, gidas};
-        return(clubs);
+        Club clubs[] = { gics, dnas, nhs, optix, gidas };
+        return (clubs);
     }
 
 }

@@ -1,7 +1,5 @@
 package com.nighthawk.team_backend.mvc.database.club;
 
-import com.nighthawk.team_backend.mvc.database.ModelRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,68 +12,80 @@ import java.util.List;
 // Built using article: https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/mvc.html
 // or similar: https://asbnotebook.com/2020/04/11/spring-boot-thymeleaf-form-validation-example/
 @Controller
+@RequestMapping("/mvc/club")
 public class ClubViewController {
-    // Autowired enables Control to connect HTML and POJO Object to database easily for CRUD
+    // Autowired enables Control to connect HTML and POJO Object to database easily
+    // for CRUD
     @Autowired
-    private ModelRepository repository;
+    private ClubDetailsService repository;
 
-    @GetMapping("/database/club")
+    @GetMapping("/read")
     public String club(Model model) {
         List<Club> list = repository.listAll();
         model.addAttribute("list", list);
-        return "mvc/database/club";
+        return "club/read";
     }
 
-    /*  The HTML template Forms and ClubForm attributes are bound
-        @return - template for club form
-        @param - Club Class
-    */
-    @GetMapping("/database/clubcreate")
-    public String clubAdd(Club club) {
-        return "mvc/database/clubcreate";
-    }
-
-    /* Gathers the attributes filled out in the form, tests for and retrieves validation error
-    @param - Club object with @Valid
-    @param - BindingResult object
+    /*
+     * The HTML template Forms and ClubForm attributes are bound
+     * 
+     * @return - template for club form
+     * 
+     * @param - Club Class
      */
-    @PostMapping("/database/clubcreate")
+    @GetMapping("/create")
+    public String clubAdd(Club club) {
+        return "club/create";
+    }
+
+    /*
+     * Gathers the attributes filled out in the form, tests for and retrieves
+     * validation error
+     * 
+     * @param - Club object with @Valid
+     * 
+     * @param - BindingResult object
+     */
+    @PostMapping("/create")
     public String clubSave(@Valid Club club, BindingResult bindingResult) {
         // Validation of Decorated ClubForm attributes
         if (bindingResult.hasErrors()) {
-            return "mvc/database/clubcreate";
+            return "club/create";
         }
         repository.save(club);
+        repository.addRoleToClub(club.getEmail(), "ROLE_STUDENT");
         // Redirect to next step
-        return "redirect:/database/club";
+        return "redirect:/mvc/club/read";
     }
 
-    @GetMapping("/database/clubupdate/{id}")
+    @GetMapping("/update/{id}")
     public String clubUpdate(@PathVariable("id") int id, Model model) {
         model.addAttribute("club", repository.get(id));
-        return "mvc/database/clubupdate";
+        return "club/update";
     }
 
-    @PostMapping("/database/clubupdate")
+    @PostMapping("/update")
     public String clubUpdateSave(@Valid Club club, BindingResult bindingResult) {
         // Validation of Decorated ClubForm attributes
         if (bindingResult.hasErrors()) {
-            return "mvc/database/clubupdate";
+            return "mvc/club/update";
         }
         repository.save(club);
+        repository.addRoleToClub(club.getEmail(), "ROLE_STUDENT");
 
         // Redirect to next step
-        return "redirect:/database/club";
+        return "redirect:/mvc/club/read";
     }
 
-    @GetMapping("/database/clubdelete/{id}")
+    @GetMapping("/delete/{id}")
     public String clubDelete(@PathVariable("id") long id) {
         repository.delete(id);
-        return "redirect:/database/club";
+        return "redirect:/mvc/club/read";
     }
 
-    @GetMapping("/database/club/search")
+    @GetMapping("/search")
     public String club() {
-        return "mvc/database/club_search";
+        return "club/search";
     }
+
 }
