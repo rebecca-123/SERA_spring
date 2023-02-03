@@ -20,14 +20,16 @@ public class ClubApiController {
 
     // Autowired enables Control to connect POJO Object through JPA
     @Autowired
-    private ClubJpaRepository repository;
+    private ClubDetailsService repository;
+    @Autowired
+    private ClubJpaRepository jparepository;
 
     /*
      * GET List of People
      */
     @GetMapping("/")
     public ResponseEntity<List<Club>> getPeople() {
-        return new ResponseEntity<>(repository.findAllByOrderByNameAsc(), HttpStatus.OK);
+        return new ResponseEntity<>(repository.listAll(), HttpStatus.OK);
     }
 
     /*
@@ -35,7 +37,7 @@ public class ClubApiController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Club> getClub(@PathVariable long id) {
-        Optional<Club> optional = repository.findById(id);
+        Optional<Club> optional = jparepository.findById(id);
         if (optional.isPresent()) { // Good ID
             Club club = optional.get(); // value from findByID
             return new ResponseEntity<>(club, HttpStatus.OK); // OK HTTP response: status code, headers, and body
@@ -49,10 +51,10 @@ public class ClubApiController {
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Club> deleteClub(@PathVariable long id) {
-        Optional<Club> optional = repository.findById(id);
+        Optional<Club> optional = jparepository.findById(id);
         if (optional.isPresent()) { // Good ID
             Club club = optional.get(); // value from findByID
-            repository.deleteById(id); // value from findByID
+            jparepository.deleteById(id); // value from findByID
             return new ResponseEntity<>(club, HttpStatus.OK); // OK HTTP response: status code, headers, and body
         }
         // Bad ID
@@ -83,7 +85,7 @@ public class ClubApiController {
         String term = (String) map.get("term");
 
         // JPA query to filter on term
-        List<Club> list = repository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(term, term);
+        List<Club> list = repository.listLike(term);
 
         // return resulting list and status, error checking should be added
         return new ResponseEntity<>(list, HttpStatus.OK);

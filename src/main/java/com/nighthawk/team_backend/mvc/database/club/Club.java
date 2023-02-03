@@ -132,8 +132,13 @@ public class Club {
         gidas.setPassword("54321!");
         // p5.setNote("hi this is efhdjwjkf");
 
+        Club ncs = new Club();
+        ncs.setName("Nighthawk Coding Society");
+        ncs.setEmail("tedison@example.com");
+        ncs.setPassword("123toby");
+
         // Array definition and data initialization
-        Club clubs[] = { gics, dnas, nhs, optix, gidas };
+        Club clubs[] = { gics, dnas, nhs, optix, gidas, ncs };
         return (clubs);
     }
 

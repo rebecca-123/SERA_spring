@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 // list the requests/endpoints need to be authenticated
                 .authorizeRequests()
-                .antMatchers("/api/club/**").authenticated()
+                .antMatchers("/hello**").authenticated()
                 .and().
                 // make sure we use stateless session;
                 // session won't be used to store user's state.
