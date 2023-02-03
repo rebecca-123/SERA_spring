@@ -1,77 +1,89 @@
 package com.nighthawk.team_backend.mvc.database.club;
 
-// import com.nighthawk.team_backend.mvc.database.ModelRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.nighthawk.team_backend.mvc.database.ModelRepository;
-
 import java.util.*;
 
 @RestController
 @RequestMapping("/api/club")
 public class ClubApiController {
+    // @Autowired
+    // private JwtTokenUtil jwtGen;
     /*
-    #### RESTful API ####
-    Resource: https://spring.io/guides/gs/rest-service/
-    */
-
-    // Autowired enables Control to connect HTML and POJO Object to database easily for CRUD
-    @Autowired
-    private ModelRepository repository;
-
-    /*
-    GET List of People
+     * #### RESTful API ####
+     * Resource: https://spring.io/guides/gs/rest-service/
      */
-    @GetMapping("/all")
+
+    // Autowired enables Control to connect POJO Object through JPA
+    @Autowired
+    private ClubJpaRepository repository;
+
+    /*
+     * GET List of People
+     */
+    @GetMapping("/")
     public ResponseEntity<List<Club>> getPeople() {
-        return new ResponseEntity<>(repository.listAll(), HttpStatus.OK);
+        return new ResponseEntity<>(repository.findAllByOrderByNameAsc(), HttpStatus.OK);
     }
 
     /*
-    GET individual Person using ID
+     * GET individual Club using ID
      */
     @GetMapping("/{id}")
     public ResponseEntity<Club> getClub(@PathVariable long id) {
-        return new ResponseEntity<>(repository.get(id), HttpStatus.OK);
+        Optional<Club> optional = repository.findById(id);
+        if (optional.isPresent()) { // Good ID
+            Club club = optional.get(); // value from findByID
+            return new ResponseEntity<>(club, HttpStatus.OK); // OK HTTP response: status code, headers, and body
+        }
+        // Bad ID
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /*
-    DELETE individual Person using ID
+     * DELETE individual Club using ID
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteClub(@PathVariable long id) {
-        repository.delete(id);
-        return new ResponseEntity<>( ""+ id +" deleted", HttpStatus.OK);
+    public ResponseEntity<Club> deleteClub(@PathVariable long id) {
+        Optional<Club> optional = repository.findById(id);
+        if (optional.isPresent()) { // Good ID
+            Club club = optional.get(); // value from findByID
+            repository.deleteById(id); // value from findByID
+            return new ResponseEntity<>(club, HttpStatus.OK); // OK HTTP response: status code, headers, and body
+        }
+        // Bad ID
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /*
-    POST Aa record by Requesting Parameters from URI
+     * POST Aa record by Requesting Parameters from URI
      */
-    @PostMapping( "/post")
+    @PostMapping("/post")
     public ResponseEntity<Object> postClub(@RequestParam("email") String email,
-                                             @RequestParam("password") String password,
-                                             @RequestParam("name") String name) {
-        // A club object WITHOUT ID will create a new record with default roles as student
+            @RequestParam("password") String password,
+            @RequestParam("name") String name) {
+        // A club object WITHOUT ID will create a new record with default roles as
+        // student
         Club club = new Club(email, password, name);
         repository.save(club);
-        return new ResponseEntity<>(email +" is created successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>(email + " is created successfully", HttpStatus.CREATED);
     }
 
     /*
-    The personSearch API looks across database for partial match to term (k,v) passed by RequestEntity body
+     * The clubSearch API looks across database for partial match to term (k,v)
+     * passed by RequestEntity body
      */
     @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> clubSearch(@RequestBody final Map<String,String> map) {
+    public ResponseEntity<Object> clubSearch(@RequestBody final Map<String, String> map) {
         // extract term from RequestEntity
         String term = (String) map.get("term");
 
-        // custom JPA query to filter on term
-        List<Club> list = repository.listLikeNative(term);
+        // JPA query to filter on term
+        List<Club> list = repository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(term, term);
 
         // return resulting list and status, error checking should be added
         return new ResponseEntity<>(list, HttpStatus.OK);
