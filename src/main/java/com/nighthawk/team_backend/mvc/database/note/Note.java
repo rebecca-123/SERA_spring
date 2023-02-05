@@ -1,6 +1,7 @@
 package com.nighthawk.team_backend.mvc.database.note;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.nighthawk.team_backend.mvc.database.club.Club;
 import lombok.*;
 
@@ -38,7 +39,13 @@ public class Note {
         this.club = p;
     
     }
+
+      
+   public String toString(){
+    return ( "{ \"Note Value\": " + this.text + " }" );
+ }	
+
+
+
     
-
-
 }
