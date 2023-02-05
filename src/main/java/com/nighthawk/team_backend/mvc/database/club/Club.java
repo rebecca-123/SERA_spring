@@ -1,6 +1,5 @@
 package com.nighthawk.team_backend.mvc.database.club;
 
-// import com.nighthawk.team_backend.mvc.database.role.Role;
 import lombok.*;
 
 import java.util.ArrayList;
