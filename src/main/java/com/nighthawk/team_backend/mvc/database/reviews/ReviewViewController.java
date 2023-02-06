@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ReviewViewController {
@@ -58,6 +60,35 @@ public ResponseEntity<Object> reviewsAdd(@RequestParam("text") String text,
 
     // Bad ID
     return new ResponseEntity<>("Club not found in club list - Club:" + clubId, HttpStatus.CREATED);
+}
+
+@PutMapping("/database/like/{id}")
+public ResponseEntity<Review> likeReview(@PathVariable("id") Long id) {
+    
+    Optional<Review> optional = reviewRepository.findById(id);
+    if (optional.isPresent()) {  // Good ID
+        Review review = optional.get();  // value from findByID
+        review.setLikes(review.getLikes()+1); // increment value
+        reviewRepository.save(review);  // save entity
+        return new ResponseEntity<>(review, HttpStatus.OK);  // OK HTTP response: status code, headers, and body
+    }
+    // Bad ID
+    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);  // Failed HTTP response: status code, headers, and body
+}
+
+@PutMapping("/database/dislike/{id}")
+public ResponseEntity<Review> dislikeReview(@PathVariable("id") Long id) {
+     
+    Optional<Review> optional = reviewRepository.findById(id);
+    if (optional.isPresent()) {  // Good ID
+        Review review = optional.get();  // value from findByID
+        review.setDislikes(review.getDislikes()+1); // increment value
+        reviewRepository.save(review);  // save entity
+        return new ResponseEntity<>(review, HttpStatus.OK);  // OK HTTP response: status code, headers, and body
+    }
+    // Bad ID
+    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);  // Failed HTTP response: status code, headers, and body
+
 }
 
 }

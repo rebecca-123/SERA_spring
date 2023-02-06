@@ -24,9 +24,17 @@ public class Review {
     @Column(columnDefinition="TEXT")
     private String text;
 
+    @Column(columnDefinition="NUMBER")
+    private int likes;
+
+    @Column(columnDefinition="NUMBER")
+    private int dislikes;
+
     public Review(String text, Club c) {
         this.text = text;
         this.club = c;
+        this.likes = 0;
+        this.dislikes = 0;
     }
 }
 
