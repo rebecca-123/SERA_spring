@@ -1,69 +1,63 @@
-// package com.nighthawk.team_backend.mvc.database.reviews;
+package com.nighthawk.team_backend.mvc.database.reviews;
 
-// import com.nighthawk.team_backend.mvc.database.ModelRepository;
-// import com.nighthawk.team_backend.mvc.database.club.Club;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Controller;
-// import org.springframework.ui.Model;
-// import org.springframework.validation.BindingResult;
-// import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.PostMapping;
+import com.nighthawk.team_backend.mvc.database.club.Club;
+import com.nighthawk.team_backend.mvc.database.club.ClubDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
-// import org.commonmark.node.Node;
-// import org.commonmark.parser.Parser;
-// import org.commonmark.renderer.html.HtmlRenderer;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
-// import javax.validation.Valid;
-// import java.util.List;
+import java.util.List;
 
-// @Controller
-// public class ReviewViewController {
-// // Autowired enables Control to connect HTML and POJO Object to database
-// easily for CRUD
-// @Autowired
-// private ModelRepository modelRepository;
+@Controller
+public class ReviewViewController {
 
-// @Autowired
-// private ReviewJpaRepository reviewRepository;
+@Autowired
+private ClubDetailsService clubRepo;
 
-// public static String convertMarkdownToHTML(String markdown) {
-// Parser parser = Parser.builder().build();
-// Node document = parser.parse(markdown);
-// HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
-// return htmlRenderer.render(document);
-// }
+@Autowired
+private ReviewJpaRepository reviewRepository;
 
-// @GetMapping("/database/reviews/{id}")
-// public String reviews(@PathVariable("id") Long id, Model model) {
-// Club club = modelRepository.get(id);
-// List<Review> reviews = reviewRepository.findAllByClub(club);
-// Review review = new Review();
-// review.setClub(club);
+public static String convertMarkdownToHTML(String markdown) {
+    Parser parser = Parser.builder().build();
+    Node document = parser.parse(markdown);
+    HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
+    return htmlRenderer.render(document);
+}
 
-// for (Review r : reviews)
-// r.setText(convertMarkdownToHTML(r.getText()));
+@GetMapping("/database/reviews/{id}")
+public ResponseEntity<List<Review>> reviews(@PathVariable("id") Long id) {
+    Club club = clubRepo.get(id);
+    if (club != null) { // Good ID
+        List<Review> reviews = reviewRepository.findAllByClub(club);
+        return new ResponseEntity<>(reviews, HttpStatus.OK); // OK HTTP response: status code, headers, and body
+    }
 
-// model.addAttribute("club", club);
-// model.addAttribute("reviews", reviews);
-// model.addAttribute("review", review);
-// return "mvc/database/reviews";
-// }
+    // Bad ID
+    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+}
 
-// @PostMapping("/database/reviews")
-// public String reviewsAdd(@Valid Review review, BindingResult bindingResult) {
-// // back to person ID on redirect
-// String redirect = "redirect:/database/reviews/"+review.getClub().getId();
+@PostMapping("/database/addreview/{id}")
+public ResponseEntity<Object> reviewsAdd(@RequestParam("text") String text,
+        @PathVariable("id") Long clubId) {
+    
+    Club club = clubRepo.get(clubId);
+    if (club != null) { // Good ID
+        Review review = new Review(text, club);
+        reviewRepository.save(review);
+        return new ResponseEntity<>("New review is created successfully for Club:" + clubId, HttpStatus.CREATED);
+    }
 
-// // database errors
-// if (bindingResult.hasErrors()) {
-// return redirect;
-// }
+    // Bad ID
+    return new ResponseEntity<>("Club not found in club list - Club:" + clubId, HttpStatus.CREATED);
+}
 
-// // note is saved and person ID is pre-set
-// reviewRepository.save(review);
-
-// // Redirect to next step
-// return redirect;
-// }
-// }
+}
