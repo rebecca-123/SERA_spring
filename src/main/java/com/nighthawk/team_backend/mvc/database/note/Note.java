@@ -42,7 +42,7 @@ public class Note {
 
       
    public String toString(){
-    return ( "{ \"Note Value\": " + this.text + " }" );
+    return ( "{ \"document\": " + this.text + " }" );
  }	
 
 
