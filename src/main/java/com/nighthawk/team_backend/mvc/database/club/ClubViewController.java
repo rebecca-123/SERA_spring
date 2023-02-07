@@ -68,7 +68,7 @@ public class ClubViewController {
     public String clubUpdateSave(@Valid Club club, BindingResult bindingResult) {
         // Validation of Decorated ClubForm attributes
         if (bindingResult.hasErrors()) {
-            return "mvc/club/update";
+            return "club/update";
         }
         repository.save(club);
         repository.addRoleToClub(club.getEmail(), "ROLE_STUDENT");
