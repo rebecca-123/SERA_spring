@@ -8,7 +8,7 @@ public class Hello {
 
 	@RequestMapping({ "/hello" })
 	public String firstPage() {
-		return "{JSON: Hello World}";
+		return "{\"json\": \"hello world\"}";
 	}
 
 }
