@@ -141,4 +141,17 @@ public class Club {
         return (clubs);
     }
 
+    public static String toString(Club club) {
+        return "{" + "\"Name\":" + club.name + ",\"Email\":" + club.email + ",\"Password\":" + club.password + "}";
+    }
+
+    public static void main(String[] args) {
+        Club gics = new Club();
+        gics.setName("Girls in Computer Science");
+        gics.setEmail("gics.dnhs@gmail.com");
+        gics.setPassword("cs123%!");
+        System.out.println(toString(gics));
+
+    }
+
 }
