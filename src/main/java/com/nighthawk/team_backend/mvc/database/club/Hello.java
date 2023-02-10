@@ -11,4 +11,9 @@ public class Hello {
 		return "{\"json\": \"hello world\"}";
 	}
 
+	@RequestMapping({ "/json" })
+	public String jsonPage() {
+		return "{\"json\": \"hello world\"}";
+	}
+
 }
