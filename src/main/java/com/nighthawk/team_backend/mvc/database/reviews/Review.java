@@ -36,5 +36,18 @@ public class Review {
         this.likes = 0;
         this.dislikes = 0;
     }
+
+    @Override
+    public String toString() {
+        return "Review [club=" + club.getName() + ", text=" + text + ", likes=" + likes + ", dislikes=" + dislikes + "]";
+    }
+
+    public static void main(String[] args) {
+        Club c = new Club ("hi@gmail.com", "abc123", "Test Club");
+        Review review1 = new Review("First Review for Club", c);
+        
+        System.out.println("Review 1: " + review1.toString());
+
+    }
 }
 
