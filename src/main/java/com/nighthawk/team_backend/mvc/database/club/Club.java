@@ -47,6 +47,8 @@ public class Club {
     // @ManyToMany(fetch = EAGER)
     // private Collection<ClubRole> roles = new ArrayList<>();
 
+    private ArrayList<String> types = new ArrayList<>();
+
     /*
      * @NonNull
      * private Note note = new Note("test", this);
@@ -96,11 +98,13 @@ public class Club {
     }
 
     // Initializer used when setting database from an API
-    public Club(String email, String password, String name, String purpose, String president, String advisor,
+    public Club(String email, String password, String name, ArrayList<String> types, String purpose, String president,
+            String advisor,
             String meeting, String info, String official) {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.types = types;
         this.purpose = purpose;
         this.president = president;
         this.advisor = advisor;
@@ -111,11 +115,15 @@ public class Club {
 
     public static Club[] init() {
 
+        ArrayList<String> nhs_types = new ArrayList<>();
+        nhs_types.add("Service");
+
         // basics of class construction
         Club nhs = new Club();
         nhs.setEmail("dnhshonorsociety@gmail.com");
         nhs.setPassword("nhs");
         nhs.setName("Del Norte National Honor Society");
+        nhs.setTypes(nhs_types);
         nhs.setPurpose(
                 "A national volunteer organization for high school students who go out into the community with four pillars in mind: scholarship, service, leadership, and character.");
         nhs.setPresident("Dominic De La Torre");
@@ -123,6 +131,9 @@ public class Club {
         nhs.setMeeting("N/A");
         nhs.setInfo("Website: https://dnhshonorsociety.wixsite.com/dnhs");
         nhs.setOfficial("Y");
+
+        ArrayList<String> ncs_types = new ArrayList<>();
+        ncs_types.add("STEM");
 
         Club ncs = new Club();
         ncs.setEmail("tedison@example.com");
@@ -141,8 +152,8 @@ public class Club {
 
     public static String toString(Club club) {
         return "{" + "\"ID\": " + club.id + ", \"Name\": " + club.name + ", \"Email\": " + club.email
-                + ", \"Password\": "
-                + club.password + ", \"Purpose\": " + club.purpose + ", \"President\": " + club.president
+                + ", \"Password\": " + club.password + ", \"Types\":" + club.types + ", \"Purpose\": " + club.purpose
+                + ", \"President\": " + club.president
                 + ", \"Advisor\": " + club.advisor + ", \"Meeting Time and Location\": " + club.meeting
                 + ", \"Additional Info\": " + club.info + ", \"Official Club\": " + club.official + "}";
     }
