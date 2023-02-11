@@ -44,8 +44,8 @@ public class Club {
     private String name;
 
     // To be implemented
-    @ManyToMany(fetch = EAGER)
-    private Collection<ClubRole> roles = new ArrayList<>();
+    // @ManyToMany(fetch = EAGER)
+    // private Collection<ClubRole> roles = new ArrayList<>();
 
     /*
      * @NonNull
@@ -63,7 +63,7 @@ public class Club {
 
     // @NonNull: Places this in @RequiredArgsConstructor
     @NonNull
-    @Size(min = 2, max = 50, message = "Club Purpose (2 to 50 chars)")
+    @Size(min = 2, max = 300, message = "Club Purpose (2 to 300 chars)")
     private String purpose;
 
     // @NonNull: Places this in @RequiredArgsConstructor
@@ -81,7 +81,7 @@ public class Club {
     @Size(min = 2, max = 50, message = "Meeting Time and Location (2 to 50 chars)")
     private String meeting;
 
-    @Size(min = 2, max = 50, message = "Additional Info (2 to 50 chars)")
+    @Size(min = 2, max = 150, message = "Additional Info (2 to 150 chars)")
     private String info;
 
     // @NonNull: Places this in @RequiredArgsConstructor
@@ -89,69 +89,72 @@ public class Club {
     @Size(min = 1, max = 1, message = "Official Club? (Y or N)")
     private String official;
 
-    // Initializer used when setting database from an API
     public Club(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
     }
 
+    // Initializer used when setting database from an API
+    public Club(String email, String password, String name, String purpose, String president, String advisor,
+            String meeting, String info, String official) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.purpose = purpose;
+        this.president = president;
+        this.advisor = advisor;
+        this.meeting = meeting;
+        this.info = info;
+        this.official = official;
+    }
+
     public static Club[] init() {
 
         // basics of class construction
-        Club gics = new Club();
-        gics.setName("Girls in Computer Science");
-        gics.setEmail("gics.dnhs@gmail.com");
-        gics.setPassword("cs123%!");
-        // p1.setNote("hi this is aadya");
-
-        // adding Note to notes collection
-
-        Club dnas = new Club();
-        dnas.setName("Del Norte Arduino Society");
-        dnas.setEmail("arduinoclub.dnhs@gmail.com");
-        dnas.setPassword("arduino!");
-        // p2.setNote("hi this is prashant");
-
         Club nhs = new Club();
-        nhs.setName("National Honors Society");
-        nhs.setEmail("nhs@gmail.com");
-        nhs.setPassword("nhs123!");
-        // p3.setNote("hi this is sirish");
-
-        Club optix = new Club();
-        optix.setName("Del Norte Optix");
-        optix.setEmail("optix@gmail.com");
-        optix.setPassword("1234!");
-        // p4.setNote("hi this is avan");
-
-        Club gidas = new Club();
-        gidas.setName("Genes in Diseases");
-        gidas.setEmail("gidas@gmail.com");
-        gidas.setPassword("54321!");
-        // p5.setNote("hi this is efhdjwjkf");
+        nhs.setEmail("dnhshonorsociety@gmail.com");
+        nhs.setPassword("nhs");
+        nhs.setName("Del Norte National Honor Society");
+        nhs.setPurpose(
+                "A national volunteer organization for high school students who go out into the community with four pillars in mind: scholarship, service, leadership, and character.");
+        nhs.setPresident("Dominic De La Torre");
+        nhs.setAdvisor("Mr. Swanson");
+        nhs.setMeeting("N/A");
+        nhs.setInfo("Website: https://dnhshonorsociety.wixsite.com/dnhs");
+        nhs.setOfficial("Y");
 
         Club ncs = new Club();
-        ncs.setName("Nighthawk Coding Society");
         ncs.setEmail("tedison@example.com");
         ncs.setPassword("123toby");
+        ncs.setName("Nighthawk Coding Society");
+        ncs.setPurpose("CODE CODE CODE!");
+        ncs.setPresident("N/A");
+        ncs.setAdvisor("Mr. M");
+        ncs.setInfo("GitHub: https://github.com/nighthawkcoders");
+        ncs.setOfficial("N");
 
         // Array definition and data initialization
-        Club clubs[] = { gics, dnas, nhs, optix, gidas, ncs };
+        Club clubs[] = { nhs, ncs };
         return (clubs);
     }
 
     public static String toString(Club club) {
-        return "{" + "\"Name\":" + club.name + ",\"Email\":" + club.email + ",\"Password\":" + club.password + "}";
+        return "{" + "\"ID\": " + club.id + ", \"Name\": " + club.name + ", \"Email\": " + club.email
+                + ", \"Password\": "
+                + club.password + ", \"Purpose\": " + club.purpose + ", \"President\": " + club.president
+                + ", \"Advisor\": " + club.advisor + ", \"Meeting Time and Location\": " + club.meeting
+                + ", \"Additional Info\": " + club.info + ", \"Official Club\": " + club.official + "}";
     }
 
     public static void main(String[] args) {
-        Club gics = new Club();
-        gics.setName("Girls in Computer Science");
-        gics.setEmail("gics.dnhs@gmail.com");
-        gics.setPassword("cs123%!");
-        System.out.println(toString(gics));
+        // obtain from initializer
+        Club clubs[] = init();
 
+        // iterate using "enhanced for loop"
+        for (Club club : clubs) {
+            System.out.println(toString(club)); // print object
+        }
     }
 
 }

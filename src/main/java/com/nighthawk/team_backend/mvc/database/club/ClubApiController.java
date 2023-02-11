@@ -64,15 +64,24 @@ public class ClubApiController {
     /*
      * POST Aa record by Requesting Parameters from URI
      */
+    // @PostMapping("/post")
+    // public ResponseEntity<Object> postClub(@RequestParam("email") String email,
+    // @RequestParam("password") String password,
+    // @RequestParam("name") String name) {
+    // // A club object WITHOUT ID will create a new record with default roles as
+    // // student
+    // Club club = new Club(email, password, name);
+    // repository.save(club);
+    // return new ResponseEntity<>(email + " is created successfully",
+    // HttpStatus.CREATED);
+    // }
+
     @PostMapping("/post")
-    public ResponseEntity<Object> postClub(@RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam("name") String name) {
+    public ResponseEntity<Object> postClub(@RequestBody Club club) {
         // A club object WITHOUT ID will create a new record with default roles as
         // student
-        Club club = new Club(email, password, name);
         repository.save(club);
-        return new ResponseEntity<>(email + " is created successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>(club.getEmail() + " is created successfully", HttpStatus.CREATED);
     }
 
     /*

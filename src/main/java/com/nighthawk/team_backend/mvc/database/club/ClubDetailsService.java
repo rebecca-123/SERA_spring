@@ -40,12 +40,13 @@ public class ClubDetailsService implements UserDetailsService { // "implements" 
             throw new UsernameNotFoundException("User not found with username: " + email);
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        club.getRoles().forEach(role -> { // loop through roles
-            authorities.add(new SimpleGrantedAuthority(role.getName())); // create a SimpleGrantedAuthority by passed in
-                                                                         // role, adding it all to the authorities list,
-                                                                         // list of roles gets past in for spring
-                                                                         // security
-        });
+        // club.getRoles().forEach(role -> { // loop through roles
+        // authorities.add(new SimpleGrantedAuthority(role.getName())); // create a
+        // SimpleGrantedAuthority by passed in
+        // // role, adding it all to the authorities list,
+        // // list of roles gets past in for spring
+        // // security
+        // });
         return new org.springframework.security.core.userdetails.User(club.getEmail(), club.getPassword(), authorities);
     }
 
@@ -95,12 +96,12 @@ public class ClubDetailsService implements UserDetailsService { // "implements" 
             if (club.getPassword() == null || club.getPassword().isEmpty() || club.getPassword().isBlank()) {
                 club.setPassword(passwordEncoder.encode(password));
             }
-            if (club.getRoles().isEmpty()) {
-                ClubRole role = clubRoleJpaRepository.findByName(roleName);
-                if (role != null) { // verify role
-                    club.getRoles().add(role);
-                }
-            }
+            // if (club.getRoles().isEmpty()) {
+            // ClubRole role = clubRoleJpaRepository.findByName(roleName);
+            // if (role != null) { // verify role
+            // club.getRoles().add(role);
+            // }
+            // }
         }
     }
 
@@ -126,17 +127,18 @@ public class ClubDetailsService implements UserDetailsService { // "implements" 
         Club club = clubJpaRepository.findByEmail(email);
         if (club != null) { // verify club
             ClubRole role = clubRoleJpaRepository.findByName(roleName);
-            if (role != null) { // verify role
-                boolean addRole = true;
-                for (ClubRole roleObj : club.getRoles()) { // only add if user is missing role
-                    if (roleObj.getName().equals(roleName)) {
-                        addRole = false;
-                        break;
-                    }
-                }
-                if (addRole)
-                    club.getRoles().add(role); // everything is valid for adding role
-            }
+            // if (role != null) { // verify role
+            // boolean addRole = true;
+            // for (ClubRole roleObj : club.getRoles()) { // only add if user is missing
+            // role
+            // if (roleObj.getName().equals(roleName)) {
+            // addRole = false;
+            // break;
+            // }
+            // }
+            // if (addRole)
+            // club.getRoles().add(role); // everything is valid for adding role
+            // }
         }
     }
 
