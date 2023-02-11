@@ -47,7 +47,7 @@ public class Club {
     // @ManyToMany(fetch = EAGER)
     // private Collection<ClubRole> roles = new ArrayList<>();
 
-    private ArrayList<String> types = new ArrayList<>();
+    private String types;
 
     /*
      * @NonNull
@@ -98,7 +98,7 @@ public class Club {
     }
 
     // Initializer used when setting database from an API
-    public Club(String email, String password, String name, ArrayList<String> types, String purpose, String president,
+    public Club(String email, String password, String name, String types, String purpose, String president,
             String advisor,
             String meeting, String info, String official) {
         this.email = email;
@@ -115,15 +115,12 @@ public class Club {
 
     public static Club[] init() {
 
-        ArrayList<String> nhs_types = new ArrayList<>();
-        nhs_types.add("Service");
-
         // basics of class construction
         Club nhs = new Club();
         nhs.setEmail("dnhshonorsociety@gmail.com");
         nhs.setPassword("nhs");
         nhs.setName("Del Norte National Honor Society");
-        nhs.setTypes(nhs_types);
+        nhs.setTypes("Service");
         nhs.setPurpose(
                 "A national volunteer organization for high school students who go out into the community with four pillars in mind: scholarship, service, leadership, and character.");
         nhs.setPresident("Dominic De La Torre");
@@ -132,13 +129,11 @@ public class Club {
         nhs.setInfo("Website: https://dnhshonorsociety.wixsite.com/dnhs");
         nhs.setOfficial("Y");
 
-        ArrayList<String> ncs_types = new ArrayList<>();
-        ncs_types.add("STEM");
-
         Club ncs = new Club();
         ncs.setEmail("tedison@example.com");
         ncs.setPassword("123toby");
         ncs.setName("Nighthawk Coding Society");
+        ncs.setTypes("STEM");
         ncs.setPurpose("CODE CODE CODE!");
         ncs.setPresident("N/A");
         ncs.setAdvisor("Mr. M");
