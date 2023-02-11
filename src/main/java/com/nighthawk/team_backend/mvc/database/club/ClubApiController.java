@@ -61,27 +61,37 @@ public class ClubApiController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    /*
-     * POST Aa record by Requesting Parameters from URI
-     */
-    // @PostMapping("/post")
-    // public ResponseEntity<Object> postClub(@RequestParam("email") String email,
-    // @RequestParam("password") String password,
-    // @RequestParam("name") String name) {
-    // // A club object WITHOUT ID will create a new record with default roles as
-    // // student
-    // Club club = new Club(email, password, name);
-    // repository.save(club);
-    // return new ResponseEntity<>(email + " is created successfully",
-    // HttpStatus.CREATED);
-    // }
-
     @PostMapping("/post")
     public ResponseEntity<Object> postClub(@RequestBody Club club) {
         // A club object WITHOUT ID will create a new record with default roles as
         // student
         repository.save(club);
-        return new ResponseEntity<>(club.getEmail() + " is created successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>(club.getEmail() + " was created successfully", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Object> updateClub(@PathVariable long id, @RequestBody Club club) {
+        Optional<Club> optional = jparepository.findById(id);
+        if (optional.isPresent()) { // Good ID
+            Club oldClub = optional.get(); // value from findByID
+            // update attributes of the club
+            oldClub.setEmail(club.getEmail());
+            oldClub.setPassword(club.getPassword());
+            oldClub.setName(club.getName());
+            oldClub.setTypes(club.getTypes());
+            oldClub.setPurpose(club.getPurpose());
+            oldClub.setPresident(club.getPresident());
+            oldClub.setAdvisor(club.getAdvisor());
+            oldClub.setMeeting(club.getMeeting());
+            oldClub.setInfo(club.getInfo());
+            oldClub.setOfficial(club.getOfficial());
+            return new ResponseEntity<>(oldClub.getName() + " was updated successfully", HttpStatus.OK); // OK HTTP
+            // response: status
+            // code, headers,
+            // and body
+        }
+        // Bad ID
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /*
