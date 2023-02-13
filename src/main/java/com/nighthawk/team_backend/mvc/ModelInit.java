@@ -55,7 +55,9 @@ public class ModelInit {
                     clubService.save(club); // save
 
                     // Each "test person" starts with a "test note"
-                    String text = "note 1 for " + club.getName();
+                    // String text = "note 1 for " + club.getName();
+                    String text = "note 1 for ";
+                    
                     Note n = new Note(text, club); // constructor uses new person as Many-to-One association
                     noteRepo.save(n); // JPA Save
                 }
