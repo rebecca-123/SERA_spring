@@ -86,8 +86,6 @@ public class Club {
     @Size(min = 2, max = 150, message = "Additional Info (2 to 150 chars)")
     private String info;
 
-    // @NonNull: Places this in @RequiredArgsConstructor
-    @NonNull
     @Size(min = 1, max = 1, message = "Official Club? (Y or N)")
     private String official;
 
