@@ -39,13 +39,5 @@ public class Note {
         this.club = p;
     
     }
-
-      
-   public String toString(){
-    return "{\"document\": " + this.text + "}";
- }	
-
-
-
     
 }

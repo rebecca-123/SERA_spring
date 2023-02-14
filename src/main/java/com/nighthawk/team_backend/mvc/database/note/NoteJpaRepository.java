@@ -16,7 +16,5 @@ public interface NoteJpaRepository extends JpaRepository<Note, Long> {
     void deleteByClubId(long id);
 
     
-    static List<Note> findAllByClub(Club club) {
-        return null;
-    }
+    List<Note> findAllNotesById(Long id);
 }

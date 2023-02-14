@@ -38,16 +38,14 @@ public class NoteApiController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<String> getNote(@PathVariable Long id) throws JsonMappingException, JsonProcessingException {
-      // Backend Year Object
-      Optional<Note> optional = notejparepository.findById(id);
-      if (optional.isPresent()) { // Good ID
-          Note note = optional.get(); // value from findByID
-          return new ResponseEntity<String>(note.toString(), HttpStatus.OK); // OK HTTP response: status code, headers, and body
-      }
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    
+    public ResponseEntity<List<Note>> getNote(@PathVariable Long id) throws JsonMappingException, JsonProcessingException {
+        List<Note> note = notejparepository.findAllNotesById(id);
+        return new ResponseEntity<>(note, HttpStatus.OK);
     }
+
+
+
+     
     /*
      * DELETE individual Club using ID
      */
