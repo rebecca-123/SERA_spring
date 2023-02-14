@@ -85,6 +85,7 @@ public class ClubApiController {
             oldClub.setMeeting(club.getMeeting());
             oldClub.setInfo(club.getInfo());
             oldClub.setOfficial(club.getOfficial());
+            repository.save(oldClub);
             return new ResponseEntity<>(oldClub.getName() + " was updated successfully", HttpStatus.OK); // OK HTTP
             // response: status
             // code, headers,
