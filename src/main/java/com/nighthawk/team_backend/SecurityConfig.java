@@ -78,7 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "Authorization", "x-csrf-token"))
                 .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-MaxAge", "600"))
                 .addHeaderWriter(
-                        new StaticHeadersWriter("Access-Control-Allow-Methods", "POST", "GET", "OPTIONS", "HEAD"))
+                        new StaticHeadersWriter("Access-Control-Allow-Methods", "POST", "GET", "DELETE", "OPTIONS",
+                                "HEAD"))
                 // .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin",
                 // "https://nighthawkcoders.github.io", "http://localhost:4000"))
                 .and()
@@ -86,6 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .and()
                 .logout()
+                .invalidateHttpSession(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
                 .and()
