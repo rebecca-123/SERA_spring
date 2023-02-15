@@ -46,10 +46,26 @@ public class ClubApiController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    // /*
+    // * DELETE individual Club using ID
+    // */
+    // @DeleteMapping("/delete/{id}")
+    // public ResponseEntity<Club> deleteClub(@PathVariable long id) {
+    // Optional<Club> optional = jparepository.findById(id);
+    // if (optional.isPresent()) { // Good ID
+    // Club club = optional.get(); // value from findByID
+    // jparepository.deleteById(id); // value from findByID
+    // return new ResponseEntity<>(club, HttpStatus.OK); // OK HTTP response: status
+    // code, headers, and body
+    // }
+    // // Bad ID
+    // return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    // }
+
     /*
      * DELETE individual Club using ID
      */
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public ResponseEntity<Club> deleteClub(@PathVariable long id) {
         Optional<Club> optional = jparepository.findById(id);
         if (optional.isPresent()) { // Good ID
