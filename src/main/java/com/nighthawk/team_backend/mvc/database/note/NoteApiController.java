@@ -44,6 +44,15 @@ public class NoteApiController {
     }
 
 
+    @PostMapping("/post")
+    public ResponseEntity<Object> postNote(@RequestBody Note note) {
+        // A club object WITHOUT ID will create a new record with default roles as
+        // student
+        notejparepository.save(note);
+        return new ResponseEntity<>(note.getText() + " was created successfully", HttpStatus.CREATED);
+    }
+
+
 
      
     /*
