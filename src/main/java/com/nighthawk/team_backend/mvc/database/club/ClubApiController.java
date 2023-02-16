@@ -104,7 +104,7 @@ public class ClubApiController {
         String term = (String) map.get("term");
 
         // JPA query to filter on term
-        List<Club> list = repository.listLike(term);
+        List<Club> list = repository.listLikeNative(term);
 
         // return resulting list and status, error checking should be added
         return new ResponseEntity<>(list, HttpStatus.OK);
