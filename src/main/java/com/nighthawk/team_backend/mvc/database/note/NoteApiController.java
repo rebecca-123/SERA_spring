@@ -33,6 +33,7 @@ public class NoteApiController {
         List<Note> note = notejparepository.findAllNotesById(id);
         return new ResponseEntity<>(note, HttpStatus.OK);
     }
+    
 
     /*
      * POST Aa record by Requesting Parameters from URI
