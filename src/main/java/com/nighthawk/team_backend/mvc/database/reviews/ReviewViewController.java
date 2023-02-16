@@ -2,6 +2,8 @@ package com.nighthawk.team_backend.mvc.database.reviews;
 
 import com.nighthawk.team_backend.mvc.database.club.Club;
 import com.nighthawk.team_backend.mvc.database.club.ClubDetailsService;
+import com.nighthawk.team_backend.mvc.database.club.ClubJpaRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +26,7 @@ import java.util.Optional;
 public class ReviewViewController {
 
     @Autowired
-    private ClubDetailsService clubRepo;
+    private ClubJpaRepository clubRepo;
 
     @Autowired
     private ReviewJpaRepository reviewRepository;
@@ -38,8 +40,9 @@ public class ReviewViewController {
 
     @GetMapping("/database/reviews/{id}")
     public ResponseEntity<List<Review>> reviews(@PathVariable("id") Long id) {
-        Club club = clubRepo.get(id);
-        if (club != null) { // Good ID
+        Optional<Club> optional = clubRepo.findById(id);
+        if (optional.isPresent()) { // Good ID
+            Club club = optional.get(); // value from findByID
             List<Review> reviews = reviewRepository.findAllByClub(club);
             return new ResponseEntity<>(reviews, HttpStatus.OK); // OK HTTP response: status code, headers, and body
         }
@@ -51,8 +54,9 @@ public class ReviewViewController {
     @PostMapping("/database/addreview/{id}")
     public ResponseEntity<Object> reviewsAdd(@PathVariable("id") Long clubId, @RequestBody String text) {
 
-        Club club = clubRepo.get(clubId);
-        if (club != null) { // Good ID
+        Optional<Club> optional = clubRepo.findById(clubId);
+        if (optional.isPresent()) { // Good ID
+            Club club = optional.get(); // value from findByID
             Review review = new Review(text, club);
             reviewRepository.save(review);
             return new ResponseEntity<>("New review is created successfully for Club:" + clubId, HttpStatus.CREATED);
