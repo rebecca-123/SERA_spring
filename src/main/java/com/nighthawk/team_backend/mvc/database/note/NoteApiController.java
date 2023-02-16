@@ -29,9 +29,8 @@ public class NoteApiController {
      * GET individual Club using ID
      */
     @GetMapping("/{id}")
-    public ResponseEntity<List<Note>> getNote(@PathVariable Long id)
-            throws JsonMappingException, JsonProcessingException {
-        List<Note> note = notejparepository.findByClubId(id);
+    public ResponseEntity<List<Note>> getNote(@PathVariable Long id) throws JsonMappingException, JsonProcessingException {
+        List<Note> note = notejparepository.findAllNotesById(id);
         return new ResponseEntity<>(note, HttpStatus.OK);
     }
 
