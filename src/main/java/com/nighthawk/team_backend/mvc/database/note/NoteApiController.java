@@ -2,64 +2,52 @@ package com.nighthawk.team_backend.mvc.database.note;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nighthawk.team_backend.mvc.database.club.Club;
+import com.nighthawk.team_backend.mvc.database.club.ClubJpaRepository;
 
 import java.util.*;
 
 @RestController
 @RequestMapping("/api/note")
 public class NoteApiController {
-    // @Autowired
-    // private JwtTokenUtil jwtGen;
-    /*
-     * #### RESTful API ####
-     * Resource: https://spring.io/guides/gs/rest-service/
-     */
-
     // Autowired enables Control to connect POJO Object through JPA
-  
     @Autowired
     private NoteJpaRepository notejparepository;
+
+    @Autowired
+    private ClubJpaRepository jparepository;
 
     /*
      * GET List of People
      */
-      /*
+    /*
      * GET individual Club using ID
      */
-
-
     @GetMapping("/{id}")
-    public ResponseEntity<String> getNote(@PathVariable Long id) throws JsonMappingException, JsonProcessingException {
-      // Backend Year Object
-      Optional<Note> optional = notejparepository.findById(id);
-      if (optional.isPresent()) { // Good ID
-          Note note = optional.get(); // value from findByID
-          return new ResponseEntity<String>(note.toString(), HttpStatus.OK); // OK HTTP response: status code, headers, and body
-      }
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    
+    public ResponseEntity<List<Note>> getNote(@PathVariable Long id)
+            throws JsonMappingException, JsonProcessingException {
+        List<Note> note = notejparepository.findByClubId(id);
+        return new ResponseEntity<>(note, HttpStatus.OK);
     }
-    /*
-     * DELETE individual Club using ID
-     */
-
 
     /*
      * POST Aa record by Requesting Parameters from URI
      */
-   
-    /*
-     * The clubSearch API looks across database for partial match to term (k,v)
-     * passed by RequestEntity body
-     */
- 
+
+    @PostMapping("/post/{id}")
+    public ResponseEntity<Object> note_result(@PathVariable Long id, @RequestBody String text) {
+        Optional<Club> optional = jparepository.findById(id);
+        Club club = optional.get(); // value from findByID
+        Note note = new Note(text, club);
+
+        notejparepository.save(note);
+        return new ResponseEntity<>("Note for club: " + club.getName() + "was created successfully",
+                HttpStatus.CREATED);
+    }
+
 }

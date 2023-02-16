@@ -70,7 +70,7 @@ public class Club {
 
     // @NonNull: Places this in @RequiredArgsConstructor
     @NonNull
-    @Size(min = 2, max = 30, message = "Club President (2 to 30 chars)")
+    @Size(min = 2, max = 50, message = "Club President (2 to 30 chars)")
     private String president;
 
     // @NonNull: Places this in @RequiredArgsConstructor

@@ -1,7 +1,6 @@
 package com.nighthawk.team_backend.mvc.database.note;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.nighthawk.team_backend.mvc.database.club.Club;
 import lombok.*;
 
@@ -10,10 +9,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.json.simple.JSONObject;
-
-
-
 
 @Data
 @NoArgsConstructor
@@ -25,7 +20,7 @@ public class Note {
     private Long id;
 
     @NotNull
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -37,15 +32,5 @@ public class Note {
     public Note(String text, Club p) {
         this.text = text;
         this.club = p;
-    
     }
-
-      
-   public String toString(){
-    return ( "{ \"document\": " + this.text + " }" );
- }	
-
-
-
-    
 }

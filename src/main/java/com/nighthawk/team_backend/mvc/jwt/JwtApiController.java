@@ -1,5 +1,6 @@
 package com.nighthawk.team_backend.mvc.jwt;
 
+import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nighthawk.team_backend.mvc.database.club.Club;
 import com.nighthawk.team_backend.mvc.database.club.ClubDetailsService;
+import com.nighthawk.team_backend.mvc.database.club.ClubJpaRepository;
 
 @RestController
 @CrossOrigin
@@ -30,12 +34,33 @@ public class JwtApiController {
     @Autowired
     private ClubDetailsService clubDetailsService;
 
+    @Autowired // Inject ClubJpaRepository
+    private ClubJpaRepository clubJpaRepository;
+
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody Club authenticationRequest) throws Exception {
+    public ResponseEntity<MyResponse> createAuthenticationToken(@RequestBody Club authenticationRequest)
+            throws Exception {
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
         final UserDetails userDetails = clubDetailsService
                 .loadUserByUsername(authenticationRequest.getEmail());
         final String token = jwtTokenUtil.generateToken(userDetails);
+
+        // Split the JWT into its three parts
+        String[] jwtParts = token.split("\\.");
+
+        // Decode the base64-encoded header and payload
+        String payloadJson = new String(Base64.getUrlDecoder().decode(jwtParts[1]));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode payload;
+        payload = objectMapper.readTree(payloadJson);
+        // Extract the value of a specific claim from the payload
+        String email = payload.get("sub").asText();
+
+        // find ID corresponding to email
+        Club club = clubJpaRepository.findByEmail(email);
+        Long id = club.getId();
+
         final ResponseCookie tokenCookie = ResponseCookie.from("jwt", token)
                 .httpOnly(true)
                 .secure(true)
@@ -44,7 +69,13 @@ public class JwtApiController {
                 .sameSite("None; Secure")
                 // .domain("example.com") // Set to backend domain
                 .build();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).build();
+
+        // combine id and cookie as MyResponse object
+        MyResponse response = new MyResponse(id, tokenCookie);
+        // return with cookie in header and MyRespone object in body
+        return (ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, tokenCookie.toString()))
+                .body(response);
     }
 
     private void authenticate(String username, String password) throws Exception {
