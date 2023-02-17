@@ -151,6 +151,7 @@ public class Club {
                 + ", \"Additional Info\": " + club.info + ", \"Official Club\": " + club.official + "}";
     }
 
+    // tester method
     public static void main(String[] args) {
         // obtain from initializer
         Club clubs[] = init();
