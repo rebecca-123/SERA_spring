@@ -25,10 +25,10 @@ public class ClubApiController {
     private ClubJpaRepository jparepository;
 
     /*
-     * GET List of People
+     * GET List of Clubs
      */
     @GetMapping("/")
-    public ResponseEntity<List<Club>> getPeople() {
+    public ResponseEntity<List<Club>> getClubs() {
         return new ResponseEntity<>(repository.listAll(), HttpStatus.OK);
     }
 
@@ -63,7 +63,7 @@ public class ClubApiController {
     // }
 
     /*
-     * DELETE individual Club using ID
+     * DELETE individual Club using ID, but with POST
      */
     @PostMapping("/delete/{id}")
     public ResponseEntity<Club> deleteClub(@PathVariable long id) {
@@ -101,7 +101,7 @@ public class ClubApiController {
             oldClub.setMeeting(club.getMeeting());
             oldClub.setInfo(club.getInfo());
             oldClub.setOfficial(club.getOfficial());
-            repository.save(oldClub);
+            repository.save(oldClub); // save changes to club
             return new ResponseEntity<>(oldClub.getName() + " was updated successfully", HttpStatus.OK); // OK HTTP
             // response: status
             // code, headers,
@@ -121,7 +121,7 @@ public class ClubApiController {
         String term = (String) map.get("term");
 
         // JPA query to filter on term
-        List<Club> list = repository.listLike(term);
+        List<Club> list = repository.listLikeNative(term);
 
         // return resulting list and status, error checking should be added
         return new ResponseEntity<>(list, HttpStatus.OK);
