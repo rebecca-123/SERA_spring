@@ -79,8 +79,11 @@ public class ClubApiController {
 
     @PostMapping("/post")
     public ResponseEntity<Object> postClub(@RequestBody Club club) {
-        // A club object WITHOUT ID will create a new record with default roles as
-        // student
+        // check for duplicate
+        if (jparepository.findByEmail(club.getEmail()) != null) {
+            // Return an error response indicating that the email is already in use
+            return new ResponseEntity<>("Email already in use", HttpStatus.CONFLICT);
+        }
         repository.save(club);
         return new ResponseEntity<>(club.getEmail() + " was created successfully", HttpStatus.CREATED);
     }
