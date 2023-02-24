@@ -66,7 +66,7 @@ public class ReviewViewController {
         return new ResponseEntity<>("Club not found in club list - Club:" + clubId, HttpStatus.CREATED);
     }
 
-    @PutMapping("/database/like/{id}")
+    @PostMapping("/database/like/{id}")
     public ResponseEntity<Review> likeReview(@PathVariable("id") Long id) {
 
         Optional<Review> optional = reviewRepository.findById(id);
@@ -80,7 +80,7 @@ public class ReviewViewController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Failed HTTP response: status code, headers, and body
     }
 
-    @PutMapping("/database/dislike/{id}")
+    @PostMapping("/database/dislike/{id}")
     public ResponseEntity<Review> dislikeReview(@PathVariable("id") Long id) {
 
         Optional<Review> optional = reviewRepository.findById(id);
