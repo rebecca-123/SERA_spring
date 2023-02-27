@@ -119,8 +119,10 @@ public class ClubApiController {
     public ResponseEntity<Object> clubSearch(@RequestBody final Map<String, String> map) {
         // extract term from RequestEntity
         String term = (String) map.get("term");
+        //these "terms" are same as used in frontend 
 
         // JPA query to filter on term
+        //origionally was jsut list like but mort said by native is better because more precise 
         List<Club> list = repository.listLikeNative(term);
 
         // return resulting list and status, error checking should be added
