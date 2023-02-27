@@ -71,7 +71,7 @@ public class ReviewViewController {
 
         Optional<Review> optional = reviewRepository.findById(id);
         if (optional.isPresent()) { // Good ID
-            Review review = optional.get(); // value from findByID
+            Review review = optional.get(); // value from findByID 
             review.setLikes(review.getLikes() + 1); // increment value
             reviewRepository.save(review); // save entity
             return new ResponseEntity<>(review, HttpStatus.OK); // OK HTTP response: status code, headers, and body
