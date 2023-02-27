@@ -25,10 +25,10 @@ public class ClubApiController {
     private ClubJpaRepository jparepository;
 
     /*
-     * GET List of People
+     * GET List of Clubs
      */
     @GetMapping("/")
-    public ResponseEntity<List<Club>> getPeople() {
+    public ResponseEntity<List<Club>> getClubs() {
         return new ResponseEntity<>(repository.listAll(), HttpStatus.OK);
     }
 
@@ -63,7 +63,7 @@ public class ClubApiController {
     // }
 
     /*
-     * DELETE individual Club using ID
+     * DELETE individual Club using ID, but with POST
      */
     @PostMapping("/delete/{id}")
     public ResponseEntity<Club> deleteClub(@PathVariable long id) {
@@ -79,8 +79,11 @@ public class ClubApiController {
 
     @PostMapping("/post")
     public ResponseEntity<Object> postClub(@RequestBody Club club) {
-        // A club object WITHOUT ID will create a new record with default roles as
-        // student
+        // check for duplicate
+        if (jparepository.findByEmail(club.getEmail()) != null) {
+            // Return an error response indicating that the email is already in use
+            return new ResponseEntity<>("Email already in use", HttpStatus.CONFLICT);
+        }
         repository.save(club);
         return new ResponseEntity<>(club.getEmail() + " was created successfully", HttpStatus.CREATED);
     }
@@ -101,7 +104,7 @@ public class ClubApiController {
             oldClub.setMeeting(club.getMeeting());
             oldClub.setInfo(club.getInfo());
             oldClub.setOfficial(club.getOfficial());
-            repository.save(oldClub);
+            repository.save(oldClub); // save changes to club
             return new ResponseEntity<>(oldClub.getName() + " was updated successfully", HttpStatus.OK); // OK HTTP
             // response: status
             // code, headers,

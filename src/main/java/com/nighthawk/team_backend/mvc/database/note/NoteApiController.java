@@ -35,19 +35,20 @@ public class NoteApiController {
     }
     
 
-    /*
+   /*
      * POST Aa record by Requesting Parameters from URI
      */
 
     @PostMapping("/post/{id}")
-    public ResponseEntity<Object> note_result(@PathVariable Long id, @RequestBody String text) {
+    public ResponseEntity<Object> note_result(@PathVariable Long id, @RequestBody final Map<String, String> map) {
         Optional<Club> optional = jparepository.findById(id);
         Club club = optional.get(); // value from findByID
+        String text = (String) map.get("text");
+
         Note note = new Note(text, club);
 
         notejparepository.save(note);
-        return new ResponseEntity<>("Note for club: " + club.getName() + "was created successfully",
+        return new ResponseEntity<>("Note for club: " + club.getName() + " was created successfully",
                 HttpStatus.CREATED);
     }
-
 }
