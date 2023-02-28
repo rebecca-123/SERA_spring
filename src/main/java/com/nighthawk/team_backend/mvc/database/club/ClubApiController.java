@@ -23,6 +23,8 @@ public class ClubApiController {
     private ClubDetailsService repository;
     @Autowired
     private ClubJpaRepository jparepository;
+    @Autowired
+    private ClubSearchJpaRepository clubSearchJpaRepository;    
 
     /*
      * GET List of Clubs
@@ -124,11 +126,37 @@ public class ClubApiController {
         String term = (String) map.get("term");
         //these "terms" are same as used in frontend 
 
+        // save a search
+        ClubSearch searchEntry = new ClubSearch(term);
+        clubSearchJpaRepository.saveAndFlush(searchEntry);
+
+        // get how many searches have been done
+        long searchCount = clubSearchJpaRepository.count();
+
         // JPA query to filter on term
         //origionally was jsut list like but mort said by native is better because more precise 
         List<Club> list = repository.listLikeNative(term);
 
+        // result should includes clubs and how many searches have been done so far
+        ClubSearchResult result = new ClubSearchResult(list, searchCount);
+
         // return resulting list and status, error checking should be added
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        // return new ResponseEntity<>(list, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
-}
+    /*
+     * The clubSearch API looks across database for partial match to term (k,v)
+     * passed by RequestEntity body
+     */
+    @PutMapping(value = "/clearHistory", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> clearHistory() {
+
+        // clear history in the database
+        clubSearchJpaRepository.deleteAll();
+        long searchCount = clubSearchJpaRepository.count();
+        ClearHistoryResult result = new ClearHistoryResult(searchCount);
+        
+        // return resulting list and status, error checking should be added
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+}    
