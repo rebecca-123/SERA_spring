@@ -148,7 +148,7 @@ public class ClubApiController {
      * The clubSearch API looks across database for partial match to term (k,v)
      * passed by RequestEntity body
      */
-    @PutMapping(value = "/clearHistory", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/clearHistory", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> clearHistory() {
 
         // clear history in the database
